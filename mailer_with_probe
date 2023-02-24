@@ -1,0 +1,17 @@
+#!/bin/bash
+COUNTER=0
+
+while read -r line; do
+while [ $(ps -e | grep curl | wc -l) -gt 9 ]; do sleep 1; done
+curl --ssl-reqd \
+  --url 'smtps://smtp_server:465' \
+  --user 'username@host:SOMEPASSWORD' \
+  --mail-from 'mymail@host' \
+  --mail-rcpt "$line" \
+  --upload-file mail.txt --silent &
+COUNTER=$((COUNTER+1))
+clear
+printf $COUNTER 
+done <"emails.txt"
+
+
